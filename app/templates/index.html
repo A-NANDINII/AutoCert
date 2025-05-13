@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoCert - Certificate Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4e73df;
+            --secondary-color: #f8f9fc;
+        }
+        body {
+            background-color: var(--secondary-color);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 10px 25px;
+        }
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: var(--primary-color);
+        }
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+        .file-label {
+            cursor: pointer;
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 5px;
+        }
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body p-5">
+                        <h1 class="text-center mb-4">AutoCert</h1>
+                        <p class="text-center text-muted mb-4">Automated Certificate Generation System</p>
+                        
+                        <form method="POST" action="/generate" enctype="multipart/form-data">
+                            <!-- Certificate Template Upload -->
+                            <div class="upload-area">
+                                <h5>Certificate Template</h5>
+                                <p class="text-muted">Upload a PNG or JPG file</p>
+                                <input type="file" id="template" name="template" class="file-input" accept="image/*" required>
+                                <label for="template" class="file-label">Choose Template</label>
+                                <div id="template-preview" class="mt-3"></div>
+                            </div>
+                            
+                            <!-- CSV Data Upload -->
+                            <div class="upload-area">
+                                <h5>Participant Data</h5>
+                                <p class="text-muted">Upload a CSV file with Name and Event columns</p>
+                                <input type="file" id="csv" name="csv" class="file-input" accept=".csv" required>
+                                <label for="csv" class="file-label">Choose CSV</label>
+                                <div id="csv-filename" class="mt-2 text-muted"></div>
+                            </div>
+                            
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-file-earmark-pdf"></i> Generate Certificates
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-center text-muted">
+                    <small>Files are processed securely and deleted after generation</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Preview template image
+        document.getElementById('template').addEventListener('change', function(e) {
+            const preview = document.getElementById('template-preview');
+            preview.innerHTML = '';
+            
+            if (this.files && this.files[0]) {
+                const img = document.createElement('img');
+                img.src = URL.createObjectURL(this.files[0]);
+                img.classList.add('preview-image');
+                preview.appendChild(img);
+            }
+        });
+        
+        // Show CSV filename
+        document.getElementById('csv').addEventListener('change', function(e) {
+            const label = document.getElementById('csv-filename');
+            if (this.files && this.files[0]) {
+                label.textContent = this.files[0].name;
+            } else {
+                label.textContent = '';
+            }
+        });
+    </script>
+</body>
+</html>
